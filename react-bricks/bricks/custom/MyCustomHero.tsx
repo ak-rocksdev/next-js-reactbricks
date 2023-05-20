@@ -4,12 +4,12 @@ import Link from 'next/link'
 //=============================
 // Local Types
 //=============================
-type Padding = 'big' | 'small'
+type Padding = 'usePadding' | 'noPadding'
 
 interface HeroUnitProps {
-  padding: Padding
-  title: string
-  text: string
+    padding: Padding
+    title: string
+    text: string
 }
 
 //=============================
@@ -20,9 +20,11 @@ const MyCustomHero: types.Brick<HeroUnitProps> = ({ padding }) => {
     <>
         <main className="container max-w-full mx-auto relative">
             <div className="flex flex-wrap">
-                <div className="w-full p-0 home-section">
+                <div className={`w-full p-0 home-section ${
+                    padding === 'usePadding' ? 'py-20' : ''
+                }`}>
                     <div className="h-full">
-                        <div className="container-jumbotron bg-blue h-full">
+                        <div className={`container-jumbotron bg-blue h-full`}>
                             <div className="half-left-banner">
                                 <div className="wrapper">
                                     <header className='text-black'>
@@ -36,23 +38,82 @@ const MyCustomHero: types.Brick<HeroUnitProps> = ({ padding }) => {
                                             placeholder="Type a title..."
                                             propName="title"
                                         />
-                                        <p>From design to Build!</p>
+                                        <Text 
+                                            renderBlock={(props)=> (
+                                                <p>{props.children}</p>
+                                            )}
+                                            renderPlaceholder={(props) => (
+                                                <span className="opacity-30">{props.children}</span>
+                                            )}
+                                            placeholder="Type something"
+                                            propName="description"
+                                        />
                                     </header>
-                                    <div className="block mb-4">
-                                        <Link href="#project" className="button button-black">See Our Projects</Link>
-                                    </div>
-                                    <Image alt="KIS Logo" imageClassName="block max-w-full h-auto" maxWidth={200} />
+                                    <Text 
+                                        renderBlock={(props)=> (
+                                            <div className="block mb-4">
+                                                <Link href="#project" className="button button-black">{props.children}</Link>
+                                            </div>
+                                        )}
+                                        renderPlaceholder={(props) => (
+                                            <span className="opacity-30">{props.children}</span>
+                                        )}
+                                        placeholder="Type something"
+                                        propName="button"
+                                    />
                                 </div>
                             </div>
-                            {/* <div className="half-right-banner relative">
+                            <div className="half-right-banner relative">
                                 <figure>
-                                    <Image alt="Big Skatepark Image" imageClassName="max-w-full h-auto" maxWidth={900} />
+                                    {/* <Image 
+                                        alt="Your Alt Text Here"
+                                        propName="image" 
+                                        imageClassName="block max-w-full h-auto" 
+                                        maxWidth={200} 
+                                        renderWrapper={({children, width, height})=> (
+                                            <div className="wrapper">
+                                                {children}
+                                            </div>
+                                        )}
+                                    /> */}
+                                    <Image alt="Big Skatepark Image"
+                                        propName="image"
+                                        imageClassName="w-full h-full"
+                                        maxWidth={900} 
+                                        renderWrapper={({children, width, height})=> (
+                                            <div className='w-full h-full'>
+                                                {children}
+                                            </div>
+                                        )}
+                                    />
                                     <figcaption>
-                                        <p>Wibawa Mukti International Skatepark</p>
-                                        <p className="subcaption">Bekasi, Cikarang - West Java</p>
+                                        <Text 
+                                            renderBlock={(props)=> (
+                                                <div>
+                                                    <p>{props.children}</p>
+                                                </div>
+                                            )}
+                                            renderPlaceholder={(props) => (
+                                                <span className="opacity-30">{props.children}</span>
+                                            )}
+                                            placeholder="Type something"
+                                            propName="subtitle"
+                                        />
+                                        <Text 
+                                            renderBlock={(props)=> (
+                                                <div>
+                                                    <p className="subcaption">{props.children}</p>
+                                                </div>
+                                            )}
+                                            renderPlaceholder={(props) => (
+                                                <span className="opacity-30">{props.children}</span>
+                                            )}
+                                            placeholder="Type something"
+                                            propName="subtitle-2"
+                                        />
                                     </figcaption>
                                 </figure>
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -81,9 +142,12 @@ MyCustomHero.schema = {
     label: 'My Custom Hero',
     previewImageUrl: `/bricks-preview-images/custom-hero-unit.png`,
     getDefaultProps: () => ({
-        padding: 'big',
+        padding: 'usePadding',
         title: 'This is a custom Hero Unit',
-        text: "We are a hi-tech web development company committed to deliver great products on time. We love to understand our customers' needs and exceed expectations.",
+        description: "type your description here",
+        button: "Here's a button",
+        subtitle: "Type your subtitle here",
+        subtitle2: "Type your text here",
     }),
     sideEditProps: [{
         name: 'padding',
@@ -92,12 +156,12 @@ MyCustomHero.schema = {
         selectOptions: {
             display: types.OptionsDisplay.Select,
             options: [{
-                    value: 'big',
-                    label: 'Big Padding'
+                    value: 'usePadding',
+                    label: 'Use Padding'
                 },
                 {
-                    value: 'small',
-                    label: 'Small Padding'
+                    value: 'noPadding',
+                    label: 'No Padding'
                 },
             ],
         },
